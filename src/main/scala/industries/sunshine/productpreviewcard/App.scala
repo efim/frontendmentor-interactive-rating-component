@@ -6,6 +6,7 @@ import scala.scalajs.js.annotation.*
 import org.scalajs.dom
 
 import com.raquo.laminar.api.L.{*, given}
+import com.raquo.airstream.state.Var
 
 @main
 def App(): Unit =
@@ -26,11 +27,19 @@ object Main {
     )
   }
 
-  // full voting component to be usable after adding to dom
-  // starts state shared by ui parts and logic for switching between them
+  /* full voting component to be usable after adding to dom
+   * starts state shared by ui parts and logic for switching between them
+   */
   def renderVotingComponent() = {
     val selectedVote = Var[Option[Int]](None)
     var isSubmitted = Var[Boolean](false)
+
+    // for simpler components it's good enough to pass Var into subcomponent
+    // for more complex might be good to pass in limited Signal \ update function
+    // that way it could be easier to reason about possible interactions
+    def markSubmitted(unit: Unit): Unit = {
+      isSubmitted.writer.onNext(true)
+    }
     def isSelectedVoteSignal(forVoteButton: Int) =
       selectedVote.signal.map {
         case Some(`forVoteButton`) => true
@@ -42,13 +51,19 @@ object Main {
     }
 
     div(
-      renderRatingSelectionUI(setVote, isSelectedVoteSignal)
+      child <-- isSubmitted.signal.map(
+        if (_)
+          renderThankYouUI()
+        else
+          renderRatingSelectionUI(setVote, isSelectedVoteSignal, markSubmitted)
+      )
     )
   }
 
   def renderRatingSelectionUI(
       setVote: Int => Unit,
-      isSelectedVoteSignal: Int => Signal[Boolean]
+      isSelectedVoteSignal: Int => Signal[Boolean],
+      markSubmitted: Unit => Unit
   ): Element = {
     val votes = List(1, 2, 3, 4, 5)
 
@@ -73,6 +88,10 @@ object Main {
       button(
         className := "w-full h-12 text-white rounded-full bg-orange",
         className := "duration-300 hover:bg-white hover:text-orange",
+        onClick --> Observer(_ => {
+          // use Fetch to send results to server here
+          markSubmitted(())
+        }),
         "SUBMIT"
       )
     )
@@ -97,6 +116,7 @@ object Main {
 
   def renderThankYouUI(): Element = {
     div(
+      className := "text-white",
       """
 
   You selected <!-- Add rating here --> out of 5
