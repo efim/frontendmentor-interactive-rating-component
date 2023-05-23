@@ -133,22 +133,28 @@ object Main {
     })
     div(
       className := "flex flex-col items-center py-10 px-8",
+      className := "lg:h-[415px] lg:w-[412px] lg:rounded-[2rem]",
       className := "text-white bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
       img(src := "/images/illustration-thank-you.svg", role := "img",
-      className := "h-28"),
+      className := "h-28",
+      className := "lg:h-32"),
       div(
         className := "my-6 w-auto rounded-full bg-[#282F39] text-[#A76A34]",
+        className := "lg:mt-10",
         p(
           className := "py-2 px-3 text-[#D58755]",
+          className := "lg:py-2 lg:px-4",
           s"You selected $finalRating out of 5 "
         )
       ),
       p(
         className := "py-2 text-2xl font-bold",
+        className := "lg:pt-4 lg:font-normal lg:text-[1.8rem]",
         "Thank you!"
       ),
       p(
         className := "py-1 leading-relaxed text-center text-gray-400 text-[.9rem]",
+        className := "lg:px-2 lg:pt-3 lg:leading-[1.7rem] lg:text-[.95rem]",
         "We appreciate you taking the time to give a rating. If you ever need more support, don’t hesitate to get in touch! "
       )
     )
