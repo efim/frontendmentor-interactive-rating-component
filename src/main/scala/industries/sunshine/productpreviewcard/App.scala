@@ -18,7 +18,7 @@ def App(): Unit =
 object Main {
   def appElement(): Element = {
     div(
-      className := "flex flex-col w-screen h-screen bg-[#121417]",
+      className := "flex relative flex-col w-screen h-screen bg-[#121417]",
       div(
         className := "flex flex-grow justify-center items-center",
         renderVotingComponent()
@@ -73,18 +73,24 @@ object Main {
 
     div(
       className := "bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
-      className := "p-7",
+      className := "lg:h-[415px] lg:w-[412px] lg:rounded-[2rem]",
+      className := "p-7 lg:p-9 lg:pr-12",
       div(
         className := "flex justify-center items-center w-10 h-10 rounded-full bg-gray-dark",
+        className := "lg:w-14 lg:h-14",
         img(src := "/images/icon-star.svg", role := "img")
       ),
-      p(className := "py-4 text-2xl font-bold text-white", "How did we do?"),
+      p(className := "py-4 text-2xl font-bold text-white",
+        className := "lg:pt-9 lg:text-3xl lg:font-normal lg:tracking-tight",
+        "How did we do?"),
       p(
         className := "text-gray-light",
+        className := "lg:tracking-tight lg:leading-relaxed",
         "Please let us know how we did with your support request. All feedback is appreciated to help us improve our offering!"
       ),
       div(
         className := "flex flex-row justify-between py-6 w-full",
+        className := "lg:py-8 lg:pb-10",
         votes.map(vote =>
           renderRatingSelector(vote, setVote, isSelectedVoteSignal(vote))
         )
@@ -92,6 +98,7 @@ object Main {
       button(
         className := "w-full h-12 tracking-widest text-white rounded-full bg-orange",
         className := "duration-300 hover:bg-white hover:text-orange",
+        className := "lg:h-14",
         onClick --> Observer(_ => {
           // use Fetch to send results to server here
           markSubmitted(())
@@ -108,6 +115,7 @@ object Main {
   ) = {
     button(
       className := "flex justify-center items-center w-12 h-12 rounded-full",
+      className := "lg:w-14 lg:h-14 lg:text-lg lg:font-semibold",
       className <-- isSelectedSignal.map {
         case true  => "bg-gray-medium text-white"
         case false => "bg-gray-dark text-gray-medium"
@@ -148,7 +156,7 @@ object Main {
 
   def renderAttribution(): Element = {
     div(
-      className := "h-4 attribution",
+      className := "absolute inset-x-0 bottom-2 h-4 text-white attribution",
       "Challenge by ",
       a(
         href := "https://www.frontendmentor.io?ref=challenge",
