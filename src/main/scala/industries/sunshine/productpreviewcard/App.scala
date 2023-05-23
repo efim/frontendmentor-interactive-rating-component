@@ -38,7 +38,11 @@ object Main {
     // for more complex might be good to pass in limited Signal \ update function
     // that way it could be easier to reason about possible interactions
     def markSubmitted(unit: Unit): Unit = {
-      isSubmitted.writer.onNext(true)
+      // in application with backend we could set another boolean variable in case submission was successful
+      selectedVote.signal.now() match {
+        case None    => () // do nothing, no value selected
+        case Some(_) => isSubmitted.writer.onNext(true)
+      }
     }
     def isSelectedVoteSignal(forVoteButton: Int) =
       selectedVote.signal.map {
@@ -53,7 +57,7 @@ object Main {
     div(
       child <-- isSubmitted.signal.map(
         if (_)
-          renderThankYouUI()
+          renderThankYouUI(selectedVote.signal.now())
         else
           renderRatingSelectionUI(setVote, isSelectedVoteSignal, markSubmitted)
       )
@@ -114,19 +118,30 @@ object Main {
     )
   }
 
-  def renderThankYouUI(): Element = {
+  def renderThankYouUI(finalRatingOpt: Option[Int]): Element = {
+    val finalRating = finalRatingOpt.getOrElse({
+      println("Error, no was rating selected.")
+      1
+    })
     div(
-      className := "text-white",
-      """
-
-  You selected <!-- Add rating here --> out of 5
-
-  Thank you!
-
-  We appreciate you taking the time to give a rating. If you ever need more support,
-  don’t hesitate to get in touch!
-
-"""
+      className := "flex flex-col items-center py-10 px-8",
+      className := "text-white bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
+      img(src := "/images/illustration-thank-you.svg", role := "img"),
+      div(
+        className := "my-5 w-auto rounded-full bg-[#282F39] text-[#A76A34]",
+        p(
+          className := "py-2 px-3 text-[#D58755]",
+          s"You selected $finalRating out of 5 "
+        )
+      ),
+      p(
+        className := "pb-3 text-2xl font-bold",
+        "Thank you!"
+      ),
+      p(
+        className := "leading-relaxed text-center text-gray-400 text-[.9rem]",
+        "We appreciate you taking the time to give a rating. If you ever need more support, don’t hesitate to get in touch! "
+      )
     )
   }
 
