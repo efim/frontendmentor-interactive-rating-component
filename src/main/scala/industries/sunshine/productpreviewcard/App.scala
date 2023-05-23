@@ -50,20 +50,21 @@ object Main {
       p(className := "text-gray-light",
         "Please let us know how we did with your support request. All feedback is appreciated to help us improve our offering!"),
       div(
-        className := "flex flex-row justify-between p-6",
+        className := "flex flex-row justify-between py-6 w-full",
         votes.map(renderRatingSelector(_)),
       ),
       button(
         className := "w-full h-12 text-white rounded-full bg-orange",
+        className := "duration-300 hover:bg-white hover:text-orange",
         "SUBMIT")
     )
   }
 
   def renderRatingSelector(vote: Int) = {
-    p(
+    button(
       className := "flex justify-center items-center w-12 h-12 rounded-full bg-gray-dark",
       className := "text-gray-medium",
-
+      className := "duration-150 hover:text-white hover:bg-orange",
       s"$vote")
   }
 
