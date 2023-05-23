@@ -5,7 +5,22 @@ export default {
     "./src/**/*.scala",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        orange: {
+          DEFAULT: '#FB7413',
+        },
+        gray: {
+          light: '#959EAC',
+          medium: '#7C8798',
+          dark: '#262D37',
+        },
+        blue: {
+          dark: '#1E252F',
+          'very-dark': '#171E28',
+        }
+      },
+    },
   },
   plugins: [],
 }

@@ -15,31 +15,85 @@ def App(): Unit =
   )
 
 object Main {
-  def appElement(): Element =
+  def appElement(): Element = {
     div(
-      className := "bg-green-200 h-screen w-screen",
-      a(
-        href := "https://vitejs.dev",
-        target := "_blank",
-        img(src := "/vite.svg", className := "logo", alt := "Vite logo")
+      className := "flex flex-col w-screen h-screen bg-[#121417]",
+      div(
+        className := "flex flex-grow justify-center items-center",
+        renderVotingComponent(),
       ),
-      a(
-        href := "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-        target := "_blank",
-        "link to JS logo"
-      ),
-      h1("Hello Laminar!"),
-      counterButton(),
-      p(className := "read-the-docs", "Click on the Vite logo to learn more")
-    )
-
-  def counterButton(): Element = {
-    val counter = Var(0)
-    button(
-      tpe := "button",
-      "count is ",
-      child.text <-- counter,
-      onClick --> { event => counter.update(c => c + 1) }
+      renderAttribution()
     )
   }
+
+  // full voting component to be usable after adding to dom
+  // starts state shared by ui parts and logic for switching between them
+  def renderVotingComponent() = {
+    val a = 1
+    div(
+      renderRatingSelectionUI(),
+    )
+  }
+
+  def renderRatingSelectionUI(): Element = {
+    val votes = List(1,2,3,4,5)
+    div(
+      className := "bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
+      className := "p-7",
+      div(
+        className := "flex justify-center items-center w-10 h-10 rounded-full bg-gray-dark",
+        img(src := "/images/icon-star.svg", role := "img")
+      ),
+      p(
+        className := "py-4 text-2xl font-bold text-white",
+        "How did we do?"),
+      p(className := "text-gray-light",
+        "Please let us know how we did with your support request. All feedback is appreciated to help us improve our offering!"),
+      div(
+        className := "flex flex-row justify-between p-6",
+        votes.map(renderRatingSelector(_)),
+      ),
+      button(
+        className := "w-full h-12 text-white rounded-full bg-orange",
+        "SUBMIT")
+    )
+  }
+
+  def renderRatingSelector(vote: Int) = {
+    p(
+      className := "flex justify-center items-center w-12 h-12 rounded-full bg-gray-dark",
+      className := "text-gray-medium",
+
+      s"$vote")
+  }
+
+  def renderThankYouUI(): Element = {
+    div(
+      """
+
+  You selected <!-- Add rating here --> out of 5
+
+  Thank you!
+
+  We appreciate you taking the time to give a rating. If you ever need more support,
+  don’t hesitate to get in touch!
+
+"""
+    )
+  }
+
+  def renderAttribution(): Element = {
+    div(
+      className := "h-4 attribution",
+      "Challenge by ",
+      a(
+        href := "https://www.frontendmentor.io?ref=challenge",
+        target := "_blank",
+        "Frontend Mentor"
+      ),
+      " Coded by ",
+      a(href := "#", "Your Name Here")
+    )
+  }
+
 }
