@@ -126,20 +126,21 @@ object Main {
     div(
       className := "flex flex-col items-center py-10 px-8",
       className := "text-white bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
-      img(src := "/images/illustration-thank-you.svg", role := "img"),
+      img(src := "/images/illustration-thank-you.svg", role := "img",
+      className := "h-28"),
       div(
-        className := "my-5 w-auto rounded-full bg-[#282F39] text-[#A76A34]",
+        className := "my-6 w-auto rounded-full bg-[#282F39] text-[#A76A34]",
         p(
           className := "py-2 px-3 text-[#D58755]",
           s"You selected $finalRating out of 5 "
         )
       ),
       p(
-        className := "pb-3 text-2xl font-bold",
+        className := "py-2 text-2xl font-bold",
         "Thank you!"
       ),
       p(
-        className := "leading-relaxed text-center text-gray-400 text-[.9rem]",
+        className := "py-1 leading-relaxed text-center text-gray-400 text-[.9rem]",
         "We appreciate you taking the time to give a rating. If you ever need more support, don’t hesitate to get in touch! "
       )
     )
