@@ -20,7 +20,7 @@ object Main {
       className := "flex flex-col w-screen h-screen bg-[#121417]",
       div(
         className := "flex flex-grow justify-center items-center",
-        renderVotingComponent(),
+        renderVotingComponent()
       ),
       renderAttribution()
     )
@@ -29,14 +29,29 @@ object Main {
   // full voting component to be usable after adding to dom
   // starts state shared by ui parts and logic for switching between them
   def renderVotingComponent() = {
-    val a = 1
+    val selectedVote = Var[Option[Int]](None)
+    var isSubmitted = Var[Boolean](false)
+    def isSelectedVoteSignal(forVoteButton: Int) =
+      selectedVote.signal.map {
+        case Some(`forVoteButton`) => true
+        case _                     => false
+      }
+    def setVote(vote: Int) = {
+      selectedVote.writer.onNext(Some(vote))
+      println(s"voting $vote. current vote is ${selectedVote.signal.now()}")
+    }
+
     div(
-      renderRatingSelectionUI(),
+      renderRatingSelectionUI(setVote, isSelectedVoteSignal)
     )
   }
 
-  def renderRatingSelectionUI(): Element = {
-    val votes = List(1,2,3,4,5)
+  def renderRatingSelectionUI(
+      setVote: Int => Unit,
+      isSelectedVoteSignal: Int => Signal[Boolean]
+  ): Element = {
+    val votes = List(1, 2, 3, 4, 5)
+
     div(
       className := "bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
       className := "p-7",
@@ -44,28 +59,40 @@ object Main {
         className := "flex justify-center items-center w-10 h-10 rounded-full bg-gray-dark",
         img(src := "/images/icon-star.svg", role := "img")
       ),
+      p(className := "py-4 text-2xl font-bold text-white", "How did we do?"),
       p(
-        className := "py-4 text-2xl font-bold text-white",
-        "How did we do?"),
-      p(className := "text-gray-light",
-        "Please let us know how we did with your support request. All feedback is appreciated to help us improve our offering!"),
+        className := "text-gray-light",
+        "Please let us know how we did with your support request. All feedback is appreciated to help us improve our offering!"
+      ),
       div(
         className := "flex flex-row justify-between py-6 w-full",
-        votes.map(renderRatingSelector(_)),
+        votes.map(vote =>
+          renderRatingSelector(vote, setVote, isSelectedVoteSignal(vote))
+        )
       ),
       button(
         className := "w-full h-12 text-white rounded-full bg-orange",
         className := "duration-300 hover:bg-white hover:text-orange",
-        "SUBMIT")
+        "SUBMIT"
+      )
     )
   }
 
-  def renderRatingSelector(vote: Int) = {
+  def renderRatingSelector(
+      vote: Int,
+      setVote: Int => Unit,
+      isSelectedSignal: Signal[Boolean]
+  ) = {
     button(
-      className := "flex justify-center items-center w-12 h-12 rounded-full bg-gray-dark",
-      className := "text-gray-medium",
+      className := "flex justify-center items-center w-12 h-12 rounded-full",
+      className <-- isSelectedSignal.map {
+        case true  => "bg-gray-medium text-white"
+        case false => "bg-gray-dark text-gray-medium"
+      },
       className := "duration-150 hover:text-white hover:bg-orange",
-      s"$vote")
+      onClick --> Observer.apply(_ => setVote(vote)),
+      s"$vote"
+    )
   }
 
   def renderThankYouUI(): Element = {
