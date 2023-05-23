@@ -90,7 +90,7 @@ object Main {
         )
       ),
       button(
-        className := "w-full h-12 text-white rounded-full bg-orange",
+        className := "w-full h-12 tracking-widest text-white rounded-full bg-orange",
         className := "duration-300 hover:bg-white hover:text-orange",
         onClick --> Observer(_ => {
           // use Fetch to send results to server here
