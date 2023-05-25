@@ -18,10 +18,13 @@ def App(): Unit =
 object Main {
   def appElement(): Element = {
     div(
-      className := "flex relative flex-col w-screen h-screen bg-[#121417]",
-      div(
-        className := "flex flex-grow justify-center items-center",
-        renderVotingComponent()
+      mainTag(
+        role := "main",
+        className := "flex relative flex-col w-screen h-screen bg-[#121417]",
+        div(
+          className := "flex flex-grow justify-center items-center",
+          renderVotingComponent()
+        )
       ),
       renderAttribution()
     )
@@ -78,11 +81,13 @@ object Main {
       div(
         className := "flex justify-center items-center w-10 h-10 rounded-full bg-gray-dark",
         className := "lg:w-14 lg:h-14",
-        img(src := "/images/icon-star.svg", role := "img")
+        img(src := "/images/icon-star.svg", aria.hidden := true, alt := "")
       ),
-      p(className := "py-4 text-2xl font-bold text-white",
+      h1(
+        className := "py-4 text-2xl font-bold text-white",
         className := "lg:pt-9 lg:text-3xl lg:font-normal lg:tracking-tight",
-        "How did we do?"),
+        "How did we do?"
+      ),
       p(
         className := "text-gray-light",
         className := "lg:tracking-tight lg:leading-relaxed",
@@ -135,9 +140,13 @@ object Main {
       className := "flex flex-col items-center py-10 px-8",
       className := "lg:h-[415px] lg:w-[412px] lg:rounded-[2rem]",
       className := "text-white bg-gradient-to-b rounded-2xl from-blue-dark to-blue-very-dark h-[350px] w-[325px]",
-      img(src := "/images/illustration-thank-you.svg", role := "img",
-      className := "h-28",
-      className := "lg:h-32"),
+      img(
+        src := "/images/illustration-thank-you.svg",
+        role := "img",
+        alt := "",
+        className := "h-28",
+        className := "lg:h-32"
+      ),
       div(
         className := "my-6 w-auto rounded-full bg-[#282F39] text-[#A76A34]",
         className := "lg:mt-10",
@@ -147,7 +156,7 @@ object Main {
           s"You selected $finalRating out of 5 "
         )
       ),
-      p(
+      h1(
         className := "py-2 text-2xl font-bold",
         className := "lg:pt-4 lg:font-normal lg:text-[1.8rem]",
         "Thank you!"
@@ -161,8 +170,9 @@ object Main {
   }
 
   def renderAttribution(): Element = {
-    div(
+    footerTag(
       className := "absolute inset-x-0 bottom-2 h-4 text-white attribution",
+      role := "contentinfo",
       "Challenge by ",
       a(
         href := "https://www.frontendmentor.io?ref=challenge",
